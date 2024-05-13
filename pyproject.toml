@@ -1,0 +1,22 @@
+[project]
+name = "water_predict"
+version = "1.0"
+requires-python = ">=3.10"
+dependencies = [
+    "torch == 2.0",
+    "pytorch-lightning == 2.0",
+    "jsonargparse[signatures] ~= 4.17",
+    "wandb ~= 0.14",
+    "einops == 0.7",
+    "pandas ~= 2.2",
+]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[project.scripts]
+trainer = "water_predict.trainer:main"
