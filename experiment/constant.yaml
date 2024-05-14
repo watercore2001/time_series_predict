@@ -1,0 +1,19 @@
+seed_everything: 0
+data: share/water.yaml
+trainer: share/debug.yaml
+
+model:
+  class_path: water_predict.module.TimePrediction
+  init_args:
+    model:
+      class_path: water_predict.model.constant.Constant
+      init_args:
+        c_out: 4
+
+
+used_ckpt_for_test: "best"
+used_ckpt_for_predict: "no"
+
+wandb_logger:
+  project: water
+  name: debug

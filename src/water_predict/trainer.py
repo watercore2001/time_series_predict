@@ -4,8 +4,7 @@ from pytorch_lightning import LightningModule, LightningDataModule
 from pytorch_lightning import Trainer
 from pytorch_lightning.cli import LightningCLI, LightningArgumentParser
 from pytorch_lightning.loggers import WandbLogger
-
-urllib3.disable_warnings()
+import torch
 
 
 class LoggerLightningCLI(LightningCLI):
