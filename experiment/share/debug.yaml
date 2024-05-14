@@ -1,0 +1,12 @@
+default_root_dir: "/mnt/code/workspace/"
+accelerator: cpu
+logger: True
+# fast_dev_run: True # debug mode
+max_epochs: 2
+callbacks:
+  class_path: pytorch_lightning.callbacks.ModelCheckpoint
+  init_args:
+    filename: "{epoch:03d}_{val_RMSE:.4f}"
+    monitor: val_RMSE
+    mode: min
+    save_last: True

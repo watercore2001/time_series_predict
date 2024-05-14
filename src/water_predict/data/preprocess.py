@@ -3,7 +3,7 @@ from sklearn.preprocessing import StandardScaler
 
 
 def main():
-    data = pd.read_csv('../../../data/weekly_land_backup.csv')
+    data = pd.read_csv('../../../dataset/weekly_land_backup.csv')
 
     # 1. Station length 147
     data["Station"] = pd.factorize(data["Station"])[0]
@@ -26,7 +26,7 @@ def main():
     features.fillna(0, inplace=True)
     data[["Longitude", "Latitude", "CODMn", "DO", "NH4N", "pH"]] = pd.DataFrame(features)
     # save
-    data.to_csv('weekly_land.csv', index=False)
+    data.to_csv("weekly_land_backup.csv", index=False)
 
 
 if __name__ == "__main__":

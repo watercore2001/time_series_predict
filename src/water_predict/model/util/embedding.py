@@ -1,12 +1,13 @@
 import torch
 import torch.nn as nn
-
+from typing import Literal
 import math
 from einops import rearrange
+from water_predict.data.dataset import STATION_NUM, WATERSHED_NUM, WEEK_NUM
 
 
 class PositionalEmbedding(nn.Module):
-    def __init__(self, d_model, max_len=1000):
+    def __init__(self, d_model: int, max_len: int = 1000):
         super(PositionalEmbedding, self).__init__()
         # Compute the positional encodings once in log space.
         pe = torch.zeros(max_len, d_model).float()
@@ -32,7 +33,7 @@ class TokenEmbedding(nn.Module):
         super().__init__()
         padding = 1 if torch.__version__ >= '1.5.0' else 2
         self.embed = nn.Conv1d(in_channels=c_in, out_channels=d_model,
-                               kernel_size=3, padding=padding, padding_mode='circular')
+                               kernel_size=3, padding=padding)
         for m in self.modules():
             if isinstance(m, nn.Conv1d):
                 nn.init.kaiming_normal_(m.weight, mode='fan_in', nonlinearity='leaky_relu')
@@ -46,11 +47,10 @@ class TokenEmbedding(nn.Module):
 
 
 class DataEmbedding(nn.Module):
-    STATION_NUM = 147
-    WATERSHED_NUM = 9
-    WEEK_NUM = 53
 
-    def __init__(self, c_in, d_model, dropout=0.2, use_station=True, use_watershed=True, use_latlng=False):
+    def __init__(self, c_in: int, d_model: int,
+                 use_station: bool, use_watershed: bool, use_latlng: bool,
+                 dropout=0.2):
         super().__init__()
         self.use_station = use_station
         self.use_watershed = use_watershed
@@ -58,35 +58,43 @@ class DataEmbedding(nn.Module):
 
         self.token_embedding = TokenEmbedding(c_in=c_in, d_model=d_model)
         self.position_embedding = PositionalEmbedding(d_model=d_model)
-        self.week_embedding = nn.Embedding(self.WEEK_NUM, d_model)
+        self.week_embedding = nn.Embedding(WEEK_NUM, d_model)
 
         if self.use_station:
-            self.station_embedding = nn.Embedding(self.STATION_NUM, d_model)
+            self.station_embedding = nn.Embedding(STATION_NUM, d_model)
         if self.use_watershed:
-            self.watershed_embedding = nn.Embedding(self.WATERSHED_NUM, d_model)
+            self.watershed_embedding = nn.Embedding(WATERSHED_NUM, d_model)
         if self.use_latlng:
             self.lat_lng_embedding = nn.Linear(in_features=2, out_features=d_model)
 
         self.dropout = nn.Dropout(p=dropout)
 
-    def forward(self, batch):
+    def forward(self, batch, flag: Literal["x", "y"]):
         """
         :param batch:
             {"x": x_feature, "x_week_of_years": x_week_of_years,
             "y": y_feature, "y_week_of_years": y_week_of_years,
             "station_id": self.station_id, "watershed_id": self.watershed_id,
             "lat_lng": self.lat_lon}
+        :param flag:
         :return:
         """
-        x = self.token_embedding(batch["x"])
-        x += self.position_embedding(batch["x"])
-        x += self.week_embedding(batch["x_week_of_years"])
+        if flag == "x":
+            result = self.token_embedding(batch["x"])
+            result += self.position_embedding(batch["x"])
+            result += self.week_embedding(batch["x_week_of_years"])
+        elif flag == "y":
+            result = self.token_embedding(batch["y"])
+            result += self.position_embedding(batch["y"]).float()
+            result += self.week_embedding(batch["y_week_of_years"])
+        else:
+            raise ValueError
 
         if self.use_station:
-            x += self.station_embedding(batch["station_id"])[:, None, :]
+            result += self.station_embedding(batch["station_id"])[:, None, :]
         if self.use_watershed:
-            x += self.watershed_embedding(batch["watershed_id"])[:, None, :]
+            result += self.watershed_embedding(batch["watershed_id"])[:, None, :]
         if self.use_latlng:
-            x += self.lat_lng_embedding(batch["lat_lng"])[:, None, :]
+            result += self.lat_lng_embedding(batch["lat_lng"])[:, None, :]
 
-        return self.dropout(x)
+        return self.dropout(result)
