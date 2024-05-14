@@ -108,13 +108,15 @@ class TestDataset(Dataset):
     def __init__(self, file_path: str, watershed_ids: list[int]):
         data = pd.read_csv(file_path)
         data = data[data[WATERSHED].isin(watershed_ids)]
-        self.station_groups = data.groupby(STATION)
+        self.station_groups = []
+        for _, station_data in data.groupby(STATION):
+            self.station_groups.append(station_data)
 
     def __len__(self):
         return len(self.station_groups)
 
     def __getitem__(self, idx: int):
-        data = self.station_groups.get_group(idx)
+        data = self.station_groups[idx]
         station_id = int(data[STATION].mean())
         lat_lon = np.array([data[LATITUDE].mean(), data[LONGITUDE].mean()])
         watershed_id = int(data[WATERSHED].mean())

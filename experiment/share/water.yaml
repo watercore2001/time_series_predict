@@ -2,6 +2,6 @@ class_path: water_predict.data.module.WaterPredict
 init_args:
   batch_size: 8
   file_path: "/mnt/code/course/time_series_predict/dataset/weekly_land.csv"
-  watershed_ids: [0,1]
+  watershed_ids: [0]
   x_length: 32
   y_length: 8
