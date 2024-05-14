@@ -1,10 +1,10 @@
-import torch
+from pytorch_lightning import LightningModule
 from torch import nn
 from torchmetrics import R2Score, MeanSquaredError, MeanAbsoluteError, MetricCollection
 __all__ = ["TimePrediction"]
 
 
-class TimePrediction(BaseModule):
+class TimePrediction(LightningModule):
     def __init__(self, num_outputs: int, model: nn.Module = None):
         super().__init__()
 
@@ -19,21 +19,20 @@ class TimePrediction(BaseModule):
         # must save all hyperparameters for checkpoint
         self.save_hyperparameters(logger=False)
 
-    def regression_metrics(self, num_outputs: int):
-        metric_dict = {}
-        metric_dict["R2"] = R2Score(num_classes=num_outputs)
-        metric_dict["MAE"] = MeanAbsoluteError(num_classes=num_outputs)
-        metric_dict["RMSE"] = MeanSquaredError(num_classes=num_outputs, squared=False)
+    @staticmethod
+    def regression_metrics(num_outputs: int):
+        metric_dict = {"R2": R2Score(num_classes=num_outputs), "MAE": MeanAbsoluteError(num_classes=num_outputs),
+                       "RMSE": MeanSquaredError(num_classes=num_outputs, squared=False)}
         return MetricCollection(metric_dict)
 
-    def separate_features_metric(self, metric_values: dict[str, list[float]]) -> dict[str, float]:
+    @staticmethod
+    def separate_features_metric(metric_values: dict[str, list[float]]) -> dict[str, float]:
         metric_dict = {}
         for metric_name, features in metric_values.items():
-            for id, feature_value in enumerate(features):
-                metric_dict[f"{metric_name}_{id}"] = feature_value
+            for feature_id, feature_value in enumerate(features):
+                metric_dict[f"{metric_name}_{feature_id}"] = feature_value
 
         return metric_dict
-
 
     def training_step(self, batch: dict, batch_index: int):
         y_hat = self(batch)
