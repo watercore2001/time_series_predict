@@ -79,7 +79,6 @@ class TimePrediction(LightningModule):
         output = self.test_metric(y_hat, y)
         self.log_dict(output)
 
-
     def predict_step(self, batch: dict, batch_idx: int, dataloader_idx: int = 0):
         output = torch.zeros_like(batch["feature"])
         output[:, :PREDICT_LENGTH] = batch["feature"][:, :PREDICT_LENGTH]

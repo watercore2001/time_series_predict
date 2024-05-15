@@ -24,4 +24,4 @@ used_ckpt_for_predict: "best"
 
 wandb_logger:
   project: water
-  name: transformer4
+  name: transformer

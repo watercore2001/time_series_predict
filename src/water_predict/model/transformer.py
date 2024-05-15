@@ -33,9 +33,6 @@ class TransformerEncoder(nn.Module):
                 MLP(embedding_dim=d_model, hidden_dim_ratio=mlp_ratio, dropout=dropout)
             ]))
 
-        # in paper: Transformers without Tears: Improving the Normalization of Self-Attention
-        # In pre-norm residual unit, must append an additional normalization after both encoder and decoder
-        # so their outputs are appropriately scaled.
         self.norm1 = nn.LayerNorm(d_model)
         self.norm2 = nn.LayerNorm(d_model)
 
@@ -46,7 +43,6 @@ class TransformerEncoder(nn.Module):
             x = mlp(x) + x
             x = self.norm2(x)
 
-        # layer normalization before return
         return x
 
 
@@ -67,9 +63,6 @@ class TransformerDecoder(nn.Module):
                 MLP(embedding_dim=d_model, hidden_dim_ratio=mlp_ratio, dropout=dropout)
             ]))
 
-        # in paper: Transformers without Tears: Improving the Normalization of Self-Attention
-        # In pre-norm residual unit, must append an additional normalization after both encoder and decoder
-        # so their outputs are appropriately scaled.
         self.norm1 = nn.LayerNorm(d_model)
         self.norm2 = nn.LayerNorm(d_model)
         self.norm3 = nn.LayerNorm(d_model)
@@ -83,7 +76,6 @@ class TransformerDecoder(nn.Module):
             x = mlp(x) + x
             x = self.norm3(x)
 
-        # layer normalization before return
         return x
 
 
@@ -102,7 +94,7 @@ class Transformer(nn.Module):
         self.linear = nn.Linear(d_model, c_out)
 
     def forward(self, batch):
-        b, y_length, _ = batch["y"].shape
+        _, y_length, _ = batch["y"].shape
         batch["y"] = torch.cat((batch["x"][:, -y_length:], batch["y"]), dim=1)
         batch["y_week_of_years"] = torch.cat((batch["x_week_of_years"][:, -y_length:], batch["y_week_of_years"]), dim=1)
 
