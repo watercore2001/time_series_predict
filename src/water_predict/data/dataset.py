@@ -130,22 +130,22 @@ class PredictDataset(Dataset):
                 "lat_lng": float_to_tensor(lat_lon)}
 
 
-if __name__ == "__main__":
-    # minimal station length is 64
-
-    overall_dataset = FitDataset("../../../dataset/weekly_land.csv",
-                                 watershed_ids=list([0, 1]),
-                                 flag="train", x_length=32, y_length=8)
-    #print(overall_dataset[0])
-    #print(overall_dataset[1])
-    data = overall_dataset[172]
-    for i in range(len(overall_dataset)):
-        assert overall_dataset[i]["x"].shape == (32, 4), i
-    from torch.utils.data import DataLoader
-    loader = DataLoader(overall_dataset, batch_size=2, shuffle=False)
-    for batch in loader:
-        print(batch)
-        break
-    print(len(loader))
-    pass
+# if __name__ == "__main__":
+#     # minimal station length is 64
+#
+#     overall_dataset = FitDataset("../../../dataset/weekly_land.csv",
+#                                  watershed_ids=list([0, 1]),
+#                                  flag="train", x_length=32, y_length=8)
+#     #print(overall_dataset[0])
+#     #print(overall_dataset[1])
+#     data = overall_dataset[172]
+#     for i in range(len(overall_dataset)):
+#         assert overall_dataset[i]["x"].shape == (32, 4), i
+#     from torch.utils.data import DataLoader
+#     loader = DataLoader(overall_dataset, batch_size=2, shuffle=False)
+#     for batch in loader:
+#         print(batch)
+#         break
+#     print(len(loader))
+#     pass
 

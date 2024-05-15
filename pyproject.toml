@@ -10,6 +10,7 @@ dependencies = [
     "einops == 0.7",
     "pandas ~= 2.2",
     "scikit-learn ~= 1.4",
+    "fvcore ~= 0.1.5",
 ]
 
 [build-system]

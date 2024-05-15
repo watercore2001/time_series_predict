@@ -19,7 +19,7 @@ model:
 
 
 used_ckpt_for_test: "best"
-used_ckpt_for_predict: "no"
+used_ckpt_for_predict: "best"
 
 wandb_logger:
   project: water
