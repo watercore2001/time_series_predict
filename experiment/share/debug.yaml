@@ -6,7 +6,7 @@ max_epochs: 2
 callbacks:
   class_path: pytorch_lightning.callbacks.ModelCheckpoint
   init_args:
-    filename: "{epoch:03d}_{val_RMSE:.4f}"
-    monitor: val_RMSE
+    filename: "{epoch:03d}_{RMSE:.4f}"
+    monitor: val_MSE
     mode: min
     save_last: True

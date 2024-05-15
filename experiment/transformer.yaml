@@ -1,0 +1,27 @@
+seed_everything: 0
+data: share/water.yaml
+trainer: share/trainer.yaml
+
+model:
+  class_path: water_predict.module.TimePrediction
+  init_args:
+    model:
+      class_path: water_predict.model.transformer.Transformer
+      init_args:
+        c_in: 4
+        c_out: 4
+        d_model: 128
+        encoder_depth: 4
+        decoder_depth: 2
+        use_station: True
+        use_watershed: True
+        use_latlng: False
+    output_folder: "/mnt/disk/xials/time/output/"
+
+
+used_ckpt_for_test: "best"
+used_ckpt_for_predict: "no"
+
+wandb_logger:
+  project: water
+  name: transformer2

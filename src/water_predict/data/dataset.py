@@ -76,7 +76,7 @@ class StationDataset(Dataset):
 
 class FitDataset(Dataset):
     def __init__(self, file_path: str, flag: Literal["train", "val"], watershed_ids: list[int],
-                 x_length: int, y_length: int):
+                 x_length: int, y_length: int, ):
         super().__init__()
         data = pd.read_csv(file_path)
         data = data[data[WATERSHED].isin(watershed_ids)]
@@ -104,7 +104,7 @@ class FitDataset(Dataset):
         return self.station_datasets[dataset_index][inner_idx]
 
 
-class TestDataset(Dataset):
+class PredictDataset(Dataset):
     def __init__(self, file_path: str, watershed_ids: list[int]):
         data = pd.read_csv(file_path)
         data = data[data[WATERSHED].isin(watershed_ids)]

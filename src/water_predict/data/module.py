@@ -1,7 +1,7 @@
 from pytorch_lightning import LightningDataModule
 from torch.utils.data import DataLoader
 
-from water_predict.data.dataset import FitDataset, TestDataset
+from water_predict.data.dataset import FitDataset, PredictDataset
 
 
 class WaterPredict(LightningDataModule):
@@ -16,7 +16,7 @@ class WaterPredict(LightningDataModule):
 
         self.train_dataset = None
         self.val_dataset = None
-        self.test_dataset = None
+        self.predict_dataset = None
 
     def setup(self, stage: [str] = None):
         if stage == "fit":
@@ -25,13 +25,19 @@ class WaterPredict(LightningDataModule):
             self.val_dataset = FitDataset(file_path=self.file_path, flag="val", watershed_ids=self.watershed_ids,
                                           x_length=self.x_length, y_length=self.y_length)
         if stage == "test":
-            self.test_dataset = TestDataset(file_path=self.file_path, watershed_ids=self.watershed_ids)
+            self.val_dataset = FitDataset(file_path=self.file_path, flag="val", watershed_ids=self.watershed_ids,
+                                          x_length=self.x_length, y_length=self.y_length)
+        if stage == "predict":
+            self.predict_dataset = PredictDataset(file_path=self.file_path, watershed_ids=self.watershed_ids)
 
     def train_dataloader(self):
-        return DataLoader(self.train_dataset, batch_size=self.batch_size, pin_memory=True, shuffle=True)
+        return DataLoader(self.train_dataset, batch_size=self.batch_size, num_workers=8, pin_memory=True, shuffle=True)
 
     def val_dataloader(self):
-        return DataLoader(self.val_dataset, batch_size=self.batch_size, pin_memory=True, shuffle=False)
+        return DataLoader(self.val_dataset, batch_size=self.batch_size, num_workers=8, pin_memory=True, shuffle=False)
 
     def test_dataloader(self):
-        return DataLoader(self.test_dataset, batch_size=1, pin_memory=True, shuffle=False)
+        return self.val_dataloader()
+
+    def predict_dataloader(self):
+        return DataLoader(self.predict_dataset, batch_size=1, num_workers=8, pin_memory=True, shuffle=False)

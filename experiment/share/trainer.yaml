@@ -1,0 +1,15 @@
+default_root_dir: "/mnt/disk/xials/workspace/"
+accelerator: gpu
+logger: True
+max_epochs: 50
+callbacks:
+  - class_path: pytorch_lightning.callbacks.ModelCheckpoint
+    init_args:
+      monitor: val_MSE
+      mode: min
+      save_last: True
+  - class_path: pytorch_lightning.callbacks.EarlyStopping
+    init_args:
+      monitor: val_MSE
+      mode: min
+      patience: 10
