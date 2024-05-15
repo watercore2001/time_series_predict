@@ -89,7 +89,7 @@ class TimePrediction(LightningModule):
             batch["x"] = batch["feature"][:, i-PREDICT_LENGTH:i]
             batch["x_week_of_years"] = batch["week_of_years"][:, i-PREDICT_LENGTH:i]
             batch["y"] = torch.zeros(b, 1, c).to(batch["x"].device)
-            batch["y_week_of_years"] = batch["week_of_years"][:, i].reshape(-1,1)
+            batch["y_week_of_years"] = batch["week_of_years"][:, i].reshape(-1, 1)
             y_hat = self(batch)
             y_hat = rearrange(y_hat, "b 1 c -> b c")
             output[:, i] = y_hat

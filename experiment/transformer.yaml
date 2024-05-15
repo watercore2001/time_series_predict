@@ -11,17 +11,17 @@ model:
         c_in: 4
         c_out: 4
         d_model: 128
-        encoder_depth: 4
-        decoder_depth: 2
+        encoder_depth: 2
+        decoder_depth: 1
         use_station: True
         use_watershed: True
         use_latlng: False
-    output_folder: "/mnt/disk/xials/time/output/"
+    output_folder: "/mnt/disk/xials/time/output/transformer4/"
 
 
 used_ckpt_for_test: "best"
-used_ckpt_for_predict: "no"
+used_ckpt_for_predict: "best"
 
 wandb_logger:
   project: water
-  name: transformer2
+  name: transformer4
