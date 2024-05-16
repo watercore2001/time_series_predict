@@ -81,11 +81,11 @@ class DataEmbedding(nn.Module):
         """
         if flag == "x":
             result = self.token_embedding(batch["x"])
-            result += self.position_embedding(batch["x"])
+            result += self.position_embedding(result)
             result += self.week_embedding(batch["x_week_of_years"])
         elif flag == "y":
             result = self.token_embedding(batch["y"])
-            result += self.position_embedding(batch["y"]).float()
+            result += self.position_embedding(result)
             result += self.week_embedding(batch["y_week_of_years"])
         else:
             raise ValueError

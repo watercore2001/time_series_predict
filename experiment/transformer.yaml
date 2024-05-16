@@ -16,7 +16,7 @@ model:
         use_station: True
         use_watershed: True
         use_latlng: False
-    output_folder: "/mnt/disk/xials/time/output/transformer4/"
+    output_folder: "/mnt/disk/xials/time/output/transformer7/"
 
 
 used_ckpt_for_test: "best"
@@ -24,4 +24,6 @@ used_ckpt_for_predict: "best"
 
 wandb_logger:
   project: water
-  name: transformer
+  name: transformer7
+
+ckpt_path:
