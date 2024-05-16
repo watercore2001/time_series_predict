@@ -157,13 +157,6 @@ Transformer
 
 在 Embed 模块：并没有使用 Lat_Lng 这个信息，我觉得在使用了 station_id, 和 watershed_id 的基础上，经纬度意义不大
 
-模型结果对比
-
-| modeL | R2 | MAE | MSE |
-|-------|-----|-----|-----|
-| 1D_CNN  | 0.6471 | 0.250L2 | 0.1624 |
-| Transformer| 0.6743 | 0.2316 | 0.1496 |
-
 优化器：AdamW
 
 损失函数：MSELOSS
@@ -171,6 +164,15 @@ Transformer
 学习率：1e-5
 
 batch_size: 128
+
+模型结果对比
+
+| modeL | R2 | MAE | MSE |
+|-------|-----|-----|-----|
+| 1D_CNN  | 0.6471 | 0.250L2 | 0.1624 |
+| Transformer| 0.6743 | 0.2316 | 0.1496 |
+
+
 
 ### 模型预测
 
@@ -183,7 +185,7 @@ batch_size: 128
 ```anguLar2htmL
 output
 |--0watershed
-    |-- 00L2station.csv
+    |-- 008station.csv
     |-- 009station.csv
     |-- 013station.csv
     ...
